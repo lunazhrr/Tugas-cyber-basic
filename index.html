@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Login • Instagram</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('https://is.zobj.net/image-server/v1/images?r=tYZeGTFL710RNl51ANdLPAYx01mN16FAcwn2kUmDozlMBu856OnDIiwJ5y-cjlct7lSYDL9tm-s9figHgsPwMFEU6BnUcgJQ4y6k88xLP8doNujElKK3em4Mcop686jfq1xvvlIXDvZDTmxfGOvjjEiH3mhw5c0zaShNUugLVFFttdfFywAIqQlxV3K93HswdpQazkPNBxPNVTy1OIUzg2v6U4F-YDnx7HpWzaTBuif2wT6d9wkdD3RJcAQ');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { width: 100%; max-width: 350px; z-index: 10; }
+
+        .login-box, .edu-box {
+            background-color: rgba(15, 15, 15, 0.95);
+            border: 1px solid #333;
+            padding: 35px 28px;
+            text-align: center;
+            border-radius: 12px;
+            color: white;
+        }
+
+        .login-box { margin-bottom: 12px; }
+
+        .insta-text {
+            font-size: 38px;
+            font-weight: bold;
+            font-style: italic;
+            background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
+        /* STYLING INPUT & MATA */
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px;
+            background: #262626;
+            border: 1px solid #363636;
+            border-radius: 6px;
+            outline: none;
+            color: white;
+            font-size: 14px;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #a8a8a8;
+            font-size: 16px;
+        }
+
+        .login-button {
+            width: 100%;
+            background-color: #0095f6;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* TAMPILAN EDUKASI */
+        #edu-screen { display: none; }
+        .edu-box { border: 2px solid #FE2C55; }
+        .edu-title { color: #FE2C55; margin-bottom: 15px; font-weight: bold; }
+        .edu-text { font-size: 14px; line-height: 1.6; margin-bottom: 20px; text-align: left; }
+
+        .footer-warning {
+            margin-top: 30px;
+            color: #ff4d4d;
+            font-size: 11px;
+            text-align: center;
+            max-width: 300px;
+            line-height: 1.4;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="login-screen">
+            <div class="login-box">
+                <h1 class="insta-text">Instagram</h1>
+                <div class="login-form">
+                    <div class="input-wrapper">
+                        <input type="text" id="user-input" placeholder="Username atau email" required>
+                    </div>
+                    
+                    <div class="input-wrapper">
+                        <input type="password" id="pass-input" placeholder="Kata Sandi" required>
+                        <i class="fa-solid fa-eye" id="togglePassword"></i>
+                    </div>
+
+                    <button class="login-button" onclick="showEdu()">Log In</button>
+                </div>
+            </div>
+
+            <footer class="footer-warning">
+                Halaman ini adalah simulasi edukasi keamanan cyber. Perhatikan URL sebelum memasukkan data sensitif!
+            </footer>
+        </div>
+
+        <div id="edu-screen">
+            <div class="edu-box">
+                <h2 class="edu-title">PERINGATAN KEAMANAN</h2>
+                <div class="edu-text">
+                    Halo, <strong><span id="name-tag" style="color: #0095f6;"></span></strong>.<br><br>
+                    Ini adalah simulasi serangan Phishing. Data Anda aman karena ini hanya statis.<br><br>
+                    <strong>Tips Aman:</strong><br>
+                    1. Selalu cek domain (harus instagram.com).<br>
+                    2. Gunakan fitur "Tampilkan Password" (ikon mata) untuk memastikan Anda tidak salah ketik di situs yang BENAR.
+                </div>
+                <button class="login-button" style="background: #333;" onclick="goBack()">Kembali</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Logika untuk Ikon Mata
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordInput = document.querySelector('#pass-input');
+
+        togglePassword.addEventListener('click', function () {
+            // Ubah tipe input
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Ubah ikon mata
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        function showEdu() {
+            const user = document.getElementById('user-input').value;
+            if(user === "") {
+                alert("Harap isi username untuk simulasi.");
+                return;
+            }
+            document.getElementById('name-tag').innerText = user;
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('edu-screen').style.display = 'block';
+        }
+
+        function goBack() {
+            document.getElementById('login-screen').style.display = 'block';
+            document.getElementById('edu-screen').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
